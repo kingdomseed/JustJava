@@ -1,6 +1,5 @@
 package org.holtnet.justjava;
 
-import android.icu.text.NumberFormat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,46 +19,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    /**
-     * This method is called when the order button is clicked.
-     */
     public void submitOrder(View view) {
-        String priceMessage = "Total: " + (price * quantity);
-        priceMessage += "\nThank you!";
-        displayMessage(priceMessage);
+        displayMessage(createOrderSummary(calculatePrice()));
     }
 
-    /**
-     * This method displays the given quantity value on the screen.
-     */
     private void displayQuantity(int numberOfCoffees) {
         TextView quantityTextView = findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + numberOfCoffees);
     }
 
-    private void displayPrice(int number) {
-        TextView priceTextView = findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
+    private void displayMessage(String message) {
+        TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
     }
 
-    public void increment(View view)
-    {
+    private String createOrderSummary(int price) {
+        return "Name: Kaptain Kunal\nQuantity: " + quantity + "\nTotal: " + price + "\nThank You!";
+    }
+
+    private int calculatePrice() {
+        return price = quantity * price;
+    }
+
+    public void increment(View view) {
         quantity++;
         displayQuantity(quantity);
     }
 
-    public void decrement(View view)
-    {
-        if(quantity > 0)
-        {
+    public void decrement(View view) {
+        if (quantity > 0) {
             quantity--;
             displayQuantity(quantity);
         }
-    }
-
-    private void displayMessage(String message) {
-        TextView priceTextView = findViewById(R.id.price_text_view);
-        priceTextView.setText(message);
     }
 
 }
