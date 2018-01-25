@@ -3,6 +3,7 @@ package org.holtnet.justjava;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 /**
@@ -12,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
     private int quantity = 0;
     private int price = 5;
+    private boolean hasWhippedCream = false;
+    private boolean hasChocolate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +23,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void submitOrder(View view) {
-        displayMessage(createOrderSummary(calculatePrice()));
+        CheckBox whippedCreamCheckBox = findViewById(R.id.whipped_cream_checkbox);
+        CheckBox chocolateCheckBox = findViewById(R.id.chocolate_checkbox);
+        hasChocolate = chocolateCheckBox.isChecked();
+        hasWhippedCream = whippedCreamCheckBox.isChecked();
+        displayMessage(createOrderSummary(calculatePrice(), hasWhippedCream, hasChocolate));
     }
 
     private void displayQuantity(int numberOfCoffees) {
@@ -33,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
         orderSummaryTextView.setText(message);
     }
 
-    private String createOrderSummary(int price) {
-        return "Name: Kaptain Kunal\nQuantity: " + quantity + "\nTotal: " + price + "\nThank You!";
+    private String createOrderSummary(int price, boolean addWhippedCream, boolean hasChocolate) {
+        return "Name: Kaptain Kunal\nWhipped Cream? " + addWhippedCream +
+                "Chocolate? " + hasChocolate + "\nQuantity: " + quantity + "\nTotal: " + price + "\nThank You!";
     }
 
     private int calculatePrice() {
