@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
     private void createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
         emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "JustJava Order for: " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT,"Name: " + name + "\nWhipped Cream? " + addWhippedCream +
-                "\nChocolate? " + hasChocolate + "\nQuantity: " + quantity + "\nTotal: $" + price + "\nThank You!");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject) + " " + name);
+        emailIntent.putExtra(Intent.EXTRA_TEXT,getString(R.string.summary_name) + " " + name + "\n" + getString(R.string.summary_whipped_cream) + " " + addWhippedCream + "\n" +
+                getString(R.string.summary_chocolate) + " " +  hasChocolate + "\n" + getString(R.string.summary_quantity) + " " +  quantity + "\n" + getString(R.string.summary_total) + price + "\n" + getString(R.string.thank_you));
         if(emailIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(emailIntent);
         }
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             quantity++;
             displayQuantity(quantity);
         } else {
-            Toast.makeText(this, "You cannot choose less than 1 cup of coffee", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.order_less, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             displayQuantity(quantity);
         } else
         {
-            Toast.makeText(this, "You cannot choose less than 1 cup of coffee", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.order_more, Toast.LENGTH_SHORT).show();
         }
 
     }
