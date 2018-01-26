@@ -1,18 +1,21 @@
 package org.holtnet.justjava;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * This app displays an order form to order coffee.
  */
 public class MainActivity extends AppCompatActivity {
 
-    private int quantity = 0;
+    private int quantity = 2;
     private int price = 5;
     private String customerName = "";
     private boolean hasWhippedCream = false;
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         customerName = nameEditText.getText().toString();
         hasChocolate = chocolateCheckBox.isChecked();
         hasWhippedCream = whippedCreamCheckBox.isChecked();
-        displayMessage(createOrderSummary(customerName, calculatePrice(hasWhippedCream, hasChocolate), hasWhippedCream, hasChocolate));
+        createOrderSummary(customerName, calculatePrice(hasWhippedCream, hasChocolate), hasWhippedCream, hasChocolate);
     }
 
     private void displayQuantity(int numberOfCoffees) {
@@ -39,14 +42,15 @@ public class MainActivity extends AppCompatActivity {
         quantityTextView.setText("" + numberOfCoffees);
     }
 
-    private void displayMessage(String message) {
-        TextView orderSummaryTextView = findViewById(R.id.order_summary_text_view);
-        orderSummaryTextView.setText(message);
-    }
-
-    private String createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
-        return "Name: " + name + "\nWhipped Cream? " + addWhippedCream +
-                "\nChocolate? " + hasChocolate + "\nQuantity: " + quantity + "\nTotal: " + price + "\nThank You!";
+    private void createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "JustJava Order for: " + name);
+        emailIntent.putExtra(Intent.EXTRA_TEXT,"Name: " + name + "\nWhipped Cream? " + addWhippedCream +
+                "\nChocolate? " + hasChocolate + "\nQuantity: " + quantity + "\nTotal: $" + price + "\nThank You!");
+        if(emailIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(emailIntent);
+        }
     }
 
     private int calculatePrice(boolean hasWhippedCream, boolean hasChocolate) {
@@ -62,15 +66,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void increment(View view) {
-        quantity++;
-        displayQuantity(quantity);
+        if(quantity <= 100)
+        {
+            quantity++;
+            displayQuantity(quantity);
+        } else {
+            Toast.makeText(this, "You cannot choose less than 1 cup of coffee", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void decrement(View view) {
-        if (quantity > 0) {
+        if (quantity > 1) {
             quantity--;
             displayQuantity(quantity);
+        } else
+        {
+            Toast.makeText(this, "You cannot choose less than 1 cup of coffee", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 }
