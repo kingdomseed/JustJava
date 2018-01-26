@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -13,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int quantity = 0;
     private int price = 5;
+    private String customerName = "";
     private boolean hasWhippedCream = false;
     private boolean hasChocolate = false;
 
@@ -25,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
     public void submitOrder(View view) {
         CheckBox whippedCreamCheckBox = findViewById(R.id.whipped_cream_checkbox);
         CheckBox chocolateCheckBox = findViewById(R.id.chocolate_checkbox);
+        EditText nameEditText = findViewById(R.id.name_edit_text);
+        customerName = nameEditText.getText().toString();
         hasChocolate = chocolateCheckBox.isChecked();
         hasWhippedCream = whippedCreamCheckBox.isChecked();
-        displayMessage(createOrderSummary(calculatePrice(), hasWhippedCream, hasChocolate));
+        displayMessage(createOrderSummary(customerName, calculatePrice(hasWhippedCream, hasChocolate), hasWhippedCream, hasChocolate));
     }
 
     private void displayQuantity(int numberOfCoffees) {
@@ -40,12 +44,20 @@ public class MainActivity extends AppCompatActivity {
         orderSummaryTextView.setText(message);
     }
 
-    private String createOrderSummary(int price, boolean addWhippedCream, boolean hasChocolate) {
-        return "Name: Kaptain Kunal\nWhipped Cream? " + addWhippedCream +
+    private String createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
+        return "Name: " + name + "\nWhipped Cream? " + addWhippedCream +
                 "\nChocolate? " + hasChocolate + "\nQuantity: " + quantity + "\nTotal: " + price + "\nThank You!";
     }
 
-    private int calculatePrice() {
+    private int calculatePrice(boolean hasWhippedCream, boolean hasChocolate) {
+        if(hasChocolate)
+        {
+            price += 2;
+        }
+        if(hasWhippedCream)
+        {
+            price++;
+        }
         return price = quantity * price;
     }
 
