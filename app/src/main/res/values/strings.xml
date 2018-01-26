@@ -17,4 +17,6 @@
     <string name="email_subject">JustJava Order for: </string>
     <string name="order_less">You cannot choose less than 1 cup of coffee</string>
     <string name="order_more">You cannot choose less than 1 cup of coffee</string>
+    <string name="hyp">-</string>
+    <string name="plus">+</string>
 </resources>
