@@ -17,9 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private int quantity = 2;
     private int price = 5;
-    private String customerName = "";
-    private boolean hasWhippedCream = false;
-    private boolean hasChocolate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,47 +28,35 @@ public class MainActivity extends AppCompatActivity {
         CheckBox whippedCreamCheckBox = findViewById(R.id.whipped_cream_checkbox);
         CheckBox chocolateCheckBox = findViewById(R.id.chocolate_checkbox);
         EditText nameEditText = findViewById(R.id.name_edit_text);
-        customerName = nameEditText.getText().toString();
-        hasChocolate = chocolateCheckBox.isChecked();
-        hasWhippedCream = whippedCreamCheckBox.isChecked();
+        String customerName = nameEditText.getText().toString();
+        boolean hasChocolate = chocolateCheckBox.isChecked();
+        boolean hasWhippedCream = whippedCreamCheckBox.isChecked();
         createOrderSummary(customerName, calculatePrice(hasWhippedCream, hasChocolate), hasWhippedCream, hasChocolate);
     }
 
+
     private void displayQuantity(int numberOfCoffees) {
         TextView quantityTextView = findViewById(R.id.quantity_text_view);
-        quantityTextView.setText("" + numberOfCoffees);
+        quantityTextView.setText(new StringBuilder().append(numberOfCoffees).toString());
     }
 
-    private void createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject) + " " + name);
-        emailIntent.putExtra(Intent.EXTRA_TEXT,getString(R.string.summary_name) + " " + name + "\n" + getString(R.string.summary_whipped_cream) + " " + addWhippedCream + "\n" +
-                getString(R.string.summary_chocolate) + " " +  hasChocolate + "\n" + getString(R.string.summary_quantity) + " " +  quantity + "\n" + getString(R.string.summary_total) + price + "\n" + getString(R.string.thank_you));
-        if(emailIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(emailIntent);
-        }
-    }
 
     private int calculatePrice(boolean hasWhippedCream, boolean hasChocolate) {
-        if(hasChocolate)
-        {
+        if (hasChocolate) {
             price += 2;
         }
-        if(hasWhippedCream)
-        {
+        if (hasWhippedCream) {
             price++;
         }
         return price = quantity * price;
     }
 
     public void increment(View view) {
-        if(quantity <= 100)
-        {
+        if (quantity <= 100) {
             quantity++;
             displayQuantity(quantity);
         } else {
-            Toast.makeText(this, R.string.order_less, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.order_more, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -79,11 +64,20 @@ public class MainActivity extends AppCompatActivity {
         if (quantity > 1) {
             quantity--;
             displayQuantity(quantity);
-        } else
-        {
+        } else {
             Toast.makeText(this, R.string.order_more, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    private void createOrderSummary(String name, int price, boolean addWhippedCream, boolean hasChocolate) {
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject) + " " + name);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.summary_name) + " " + name + "\n" + getString(R.string.summary_whipped_cream) + " " + addWhippedCream + "\n" +
+                getString(R.string.summary_chocolate) + " " + hasChocolate + "\n" + getString(R.string.summary_quantity) + " " + quantity + "\n" + getString(R.string.summary_total) + price + "\n" + getString(R.string.thank_you));
+        if (emailIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(emailIntent);
+        }
     }
 
 }
